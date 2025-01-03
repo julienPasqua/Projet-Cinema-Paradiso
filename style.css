@@ -11,27 +11,27 @@
   --tertiary-color: #f5efef; /* Couleur spécifique pour la page de login.php */
 }
 
-
-
-
-
 /* Styles pour les boutons */
 /* Boutons spécifiques  inscription et logout */
 
+
 .button-container {
   display: flex;
-  align-items: center; /* Aligne verticalement les éléments */
-  gap: 10px; /* Ajoute un espacement entre les boutons et le message */
+  align-items: center;
+  gap: -10px; /* Réduit l'espace entre les deux boutons */
 }
 
-/*style du message quand l'utilisateur est connecté olé olé */
+.button-container a {
+  padding-right: 25px; /* Ajuste la distance globale */
+}
+
+/*style du message quand l'utilisateur est connecté olé olé "Bienvenue"*/
 
 .welcome-message {
   color: #0f056b; /* Couleur bleue nuit */
   font-size: 14px; /* Taille de la police */
-  font-weight: bold; /* Rend le texte plus visible */
+  font-weight: bold; /* Rend le texte plus visible */ 
 }
-
 
 
 

@@ -31,35 +31,39 @@ if (isset($_SESSION['email'])) {
   $message = '';
   $page = basename($_SERVER['PHP_SELF']);
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"] ?? '';
-    $password = $_POST["password"] ?? '';
-    $message = '';
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     if (!empty($email) && !empty($password)) {
         try {
             $user = Utilisateur::login($email, $password);
 
             if ($user) {
-            
-                $_SESSION["nom"] = $user->getNom();
-                $_SESSION["email"] = $user->getEmail();
-                $_SESSION["date_creation"] = $user->getDate_creation();
-                $_SESSION["actif"] = $user->getActif();
-              
-                header("Location: index.php");
+                // Stockez les informations de l'utilisateur dans la session
+                $_SESSION['nom'] = $user->getNom();
+                $_SESSION['email'] = $user->getEmail();
+                $_SESSION['role'] = $user->getRole(); // Stocker le rôle dans la session
+
+                // Redirection basée sur le rôle
+              if ($_SESSION['role'] === 'admin') {
+    header("Location: administrateur/admin.php"); // Chemin relatif
+} else {
+    header("Location: index.php");
+}
+
                 exit();
             } else {
-                $message = "Email ou mot de passe incorrect.";
+                echo "<div class='alert alert-danger'>Email ou mot de passe incorrect.</div>";
             }
         } catch (Exception $e) {
-            $message = "Une erreur est survenue : " . htmlspecialchars($e->getMessage());
+            echo "<div class='alert alert-danger'>Erreur : " . htmlspecialchars($e->getMessage()) . "</div>";
         }
     } else {
-        $message = "Veuillez remplir tous les champs.";
+        echo "<div class='alert alert-warning'>Veuillez remplir tous les champs.</div>";
     }
-
 }
+
 
 
 ?>

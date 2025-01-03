@@ -7,47 +7,59 @@ class Utilisateur{
     private $prenom;
     private $email;
     private $mot_de_passe;
+    private $role;
     private $date_creation;
     private $actif ;
 
-    public function __construct($nom, $prenom, $email, $mot_de_passe, $date_creation = null , $actif = 1)
+    public function __construct($nom, $prenom, $email, $mot_de_passe, $role = 'user', $date_creation = null , $actif = 1)
     {
      $this->nom = $nom;
      $this->prenom = $prenom;
      $this->email = $email;
      $this->mot_de_passe = $mot_de_passe;
+     $this->role = $role;
      $this->date_creation = $date_creation ?: date("Y-m-d H:i:s"); // Date actuelle si non fournie
      $this->actif = $actif;
     }
     public static function login($email, $mot_de_passe) {
-        // Recherche de l'utilisateur dans la base de données
         $requete = DB::getConnection()->prepare("SELECT * FROM utilisateur WHERE email = ?");
         $requete->execute([$email]);
         $utilisateur = $requete->fetch(PDO::FETCH_ASSOC);
-
-        // Vérification si un utilisateur a été trouvé
+    
         if (!$utilisateur) {
             $_SESSION['error_message'] = "Email ou mot de passe incorrect.";
             return false;
         }
-
-        // Vérification du mot de passe
+    
         if (password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
-            return new Utilisateur(
+            // Ajouter le rôle dans l'objet utilisateur
+            $user = new Utilisateur(
                 $utilisateur['nom'],
                 $utilisateur['prenom'],
                 $utilisateur['email'],
                 $utilisateur['mot_de_passe'],
-                /*$utilisateur['id_utilisateur'],*/
+                $utilisateur['role'], // Inclure le rôle
                 $utilisateur['date_creation'],
                 $utilisateur['actif']
             );
+            $user->id_utilisateur = $utilisateur['id_utilisateur'];
+            return $user;
         } else {
             $_SESSION['error_message'] = "Email ou mot de passe incorrect.";
             return false;
         }
     }
     
+      // Méthode pour récupérer tous les utilisateurs
+      public static function findAll() {
+        try {
+            $conn = DB::getConnection();
+            $stmt = $conn->query("SELECT * FROM utilisateur");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des utilisateurs : " . $e->getMessage());
+        }
+    }
     
       // Méthode pour supprimer un utilisateur
       public static function delete($id_utilisateur) {
@@ -223,6 +235,26 @@ public function save($nom, $prenom, $email, $mot_de_passe, $date_creation = null
     public function setActif($actif)
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of role
+     */ 
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * Set the value of role
+     *
+     * @return  self
+     */ 
+    public function setRole($role)
+    {
+        $this->role = $role;
 
         return $this;
     }

@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nom = $_POST["nom"];
         $prenom = $_POST["prenom"]; // Ajout du prénom dans le formulaire
         $email = $_POST["email"];
-        $pseudo = $_POST["pseudo"]; // Vous pouvez l'ajouter si vous souhaitez le stocker
+        $pseudo = $_POST["pseudo"]; // à  ajouter si je souhaite le stocker...
         $password = $_POST["password"];
         $date_de_creation = date('Y-m-d H:i:s'); // Ajout de la date de création
         $actif = true; // Utilisateur actif par défaut
