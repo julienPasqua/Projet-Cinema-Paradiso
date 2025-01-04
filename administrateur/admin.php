@@ -26,6 +26,11 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des utilisateurs</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+    
     <style>
         :root {
             --primary-color: #0f056b;
@@ -106,10 +111,10 @@ try {
 
         /* Style commun pour les boutons */
         button {
-            border: 2px solid #0f056b; /* Bordure de couleur #0f056b */
+            border: none; /* Bordure de couleur #0f056b */
             background-color: #ff7f50; /* Couleur de fond intérieure */
             color: white; /* Couleur du texte en blanc */
-            padding: 8px 15px;
+            padding: 8px 26px;
             border-radius: 5px;
             font-size: 14px;
             cursor: pointer;
@@ -130,35 +135,57 @@ try {
         }
 
         button.modify:hover {
-            background-color: #0f056b; /* Fond au survol pour le bouton Modifier */
+            background-color: #ff7f50; /* Fond au survol pour le bouton Modifier */
             border-color: #ff7f50; /* Bordure au survol */
         }
 
         button.delete {
-            background-color: red; /* Fond spécifique pour le bouton Supprimer */
+            background-color: #0f056b; /* Fond spécifique pour le bouton Supprimer */
             color: white; /* Texte en blanc */
         }
 
         button.delete:hover {
-            background-color: #ff7f50; /* Fond au survol pour le bouton Supprimer */
+            background-color:rgb(213, 26, 26); /* Fond au survol pour le bouton Supprimer */
             border-color: red; /* Bordure au survol */
         }
 
+     
         .logout-btn {
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: var(--secondary-color);
+            background-color: transparent ; 
             color: var(--text-color);
-            border: none;
-            padding: 10px 15px;
+            border: 2px solid #ff7f50; /* Couleur des contours */
+            padding: 10px 21px;
             border-radius: 5px;
             cursor: pointer;
+            transition: all 0.3s ease; /* Animation pour un effet fluide */
         }
 
         .logout-btn:hover {
-            background-color: var(--primary-color);
+            background-color:  #ff7f50;
+            border: #ff7f50;
         }
+
+        .logout-btn2 {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 2px solid #ff7f50; /* Couleur des contours */
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Animation pour un effet fluide */
+        }
+        
+        .logout-btn2:hover{
+            background-color:  #ff7f50;
+            border: #ff7f50;
+        }
+
 
         .add-user-form {
             margin-top: 20px;
@@ -221,6 +248,8 @@ try {
 </head>
 <body>
     <button class="logout-btn" onclick="window.location.href='../logout.php'">Déconnexion</button>
+    <button class="logout-btn2" onclick="window.location.href='../index.php'">Page d'Accueil</button>
+    
 
     <div class="container">
         <h1>Gestion des utilisateurs</h1>
@@ -265,10 +294,9 @@ try {
                             <a href='edit_user.php?id={$id_utilisateur}'>
                                 <button class='modify'>Modifier</button>
                             </a>
-                            <form action='delete_user.php' method='POST' style='display: inline;'>
-                                <input type='hidden' name='id_utilisateur' value='{$id_utilisateur}'>
-                                <button type='submit' class='delete'>Supprimer</button>
-                            </form>
+                            <button type='button' class='delete btn btn-danger' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='{$id_utilisateur}'>
+                               Supprimer
+                            </button>
                         </td>
                     </tr>";
                 }
@@ -279,6 +307,29 @@ try {
             ?>
             </tbody>
         </table>
+
+        <!-- Modalito -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form action="delete_user.php" method="POST">
+                    <input type="hidden" id="user-id" name="id_utilisateur">
+                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <!-- Formulaire pour ajouter un utilisateur -->
         <div class="add-user-form">
@@ -311,5 +362,20 @@ try {
             </form>
         </div>
     </div>
+    <script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        // Bouton qui a déclenché le modal
+        const button = event.relatedTarget;
+
+        // Récupération de l'ID utilisateur
+        const userId = button.getAttribute('data-id');
+
+        // Mettre à jour l'input hidden dans le formulaire
+        const inputUserId = deleteModal.querySelector('#user-id');
+        inputUserId.value = userId;
+    });
+</script>
+
 </body>
 </html>
