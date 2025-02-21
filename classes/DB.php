@@ -1,10 +1,10 @@
 <?php
 
 class DB{
-    private static $db_name = 'cinema_paradiso';
-    private static $db_user = 'root';
-    private static $db_password = 'root';
-    private static $db_host = 'localhost';
+    private static $db_name = 'roni4736_pasqua_ue2';
+    private static $db_user = 'roni4736_pasqua';
+    private static $db_password = '4I58ElYXLtI@lG';
+    private static $db_host = 'aflokkat-projet.fr';
     private static $pdo;
 
     public static function getConnection(){
